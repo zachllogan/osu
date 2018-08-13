@@ -13,6 +13,7 @@ using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Skinning;
 using OpenTK.Graphics;
+using osu.Game.Configuration;
 
 namespace osu.Game.Rulesets.Judgements
 {
@@ -31,6 +32,7 @@ namespace osu.Game.Rulesets.Judgements
 
         protected SpriteText JudgementText;
 
+
         /// <summary>
         /// Creates a drawable which visualises a <see cref="Judgements.Judgement"/>.
         /// </summary>
@@ -45,7 +47,7 @@ namespace osu.Game.Rulesets.Judgements
         }
 
         [BackgroundDependencyLoader]
-        private void load(OsuColour colours)
+        private void load(OsuConfigManager config, OsuColour colours)
         {
             this.colours = colours;
 
@@ -53,7 +55,7 @@ namespace osu.Game.Rulesets.Judgements
             {
                 Text = Judgement.Result.GetDescription().ToUpperInvariant(),
                 Font = @"Venera",
-                Colour = judgementColour(Judgement.Result),
+                Colour = config.GetBindable<bool>(OsuSetting.HitErrorJudgments) ? JudgementColour(Judgement) : judgementColour(Judgement.Result),
                 Scale = new Vector2(0.85f, 1),
                 TextSize = 12
             }, restrictSize: false);
@@ -106,6 +108,18 @@ namespace osu.Game.Rulesets.Judgements
             }
 
             return Color4.White;
+        }
+
+        private readonly Vector4 baseFastColor = new Vector4(0.5f, 0.0f, 1.0f, 1);
+        private readonly Vector4 maxFastColor = new Vector4(0.5f, 1.0f, 0.5f, 1);
+        private readonly Vector4 baseSlowColor = new Vector4(0.0f, 0.0f, 1.0f, 1);
+        private readonly Vector4 maxSlowColor = new Vector4(0.0f, 1.0f, 0.5f, 1);
+
+        protected Color4 JudgementColour(Judgement judgement)
+        {
+            return judgement.TimeOffset >= 0 ?
+            Color4.FromHcy(baseSlowColor + (maxSlowColor - baseSlowColor) * (float)(judgement.TimeOffset / JudgedObject.HitObject.HitWindows.HalfWindowFor(HitResult.Meh))) :
+            Color4.FromHcy(baseFastColor + (maxFastColor - baseFastColor) * (float)(-judgement.TimeOffset / JudgedObject.HitObject.HitWindows.HalfWindowFor(HitResult.Meh)));
         }
     }
 }
