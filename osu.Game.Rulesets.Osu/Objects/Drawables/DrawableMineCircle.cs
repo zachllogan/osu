@@ -32,8 +32,8 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             Depth = h.Depth + 1000;
             isHit = false;
 
-            h.OnJudgement += OwnerHit;
-            h.OnJudgementRemoved += OwnerHit;
+            h.OnNewResult += OwnerHit;
+            h.OnRevertResult += OwnerHit;
 
             InternalChildren = new Drawable[]
             {
@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             };
         }
 
-        private void OwnerHit(DrawableHitObject hitObject, Judgement judgement)
+        private void OwnerHit(DrawableHitObject hitObject, JudgementResult judgementResult)
         {
             if (isHit)
                 return;
