@@ -118,7 +118,10 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModAutopilot(),
                     };
                 default:
-                    return new Mod[] { };
+                    return new Mod[]
+                    {
+                        new OsuModMinefield(),
+                    };
             }
         }
 
