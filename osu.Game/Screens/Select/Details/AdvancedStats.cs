@@ -12,6 +12,10 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using System;
 using osu.Game.Beatmaps;
+using osu.Framework.Configuration;
+using System.Collections.Generic;
+using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets;
 
 namespace osu.Game.Screens.Select.Details
 {
@@ -43,7 +47,9 @@ namespace osu.Game.Screens.Select.Details
                 hpDrain.Value = Beatmap?.BaseDifficulty?.DrainRate ?? 0;
                 accuracy.Value = Beatmap?.BaseDifficulty?.OverallDifficulty ?? 0;
                 approachRate.Value = Beatmap?.BaseDifficulty?.ApproachRate ?? 0;
-                starDifficulty.Value = (float)(Beatmap?.StarDifficulty ?? 0);
+                WBeatmap = Manager.GetWorkingBeatmap(beatmap, WBeatmap);
+                if (WBeatmap == null || (beatmap.RulesetID != 0 && beatmap.RulesetID != Ruleset.Value.ID)) return;
+                starDifficulty.Value = (float)(instance.CreateDifficultyCalculator(WBeatmap)?.Calculate(SelectedMods.Value.ToArray()).StarRating ?? 0);
             }
         }
 
@@ -65,10 +71,49 @@ namespace osu.Game.Screens.Select.Details
             };
         }
 
+        protected Ruleset instance;
+
+        protected readonly Bindable<IEnumerable<Mod>> SelectedMods = new Bindable<IEnumerable<Mod>>(new Mod[] { });
+
+        protected readonly IBindable<RulesetInfo> Ruleset = new Bindable<RulesetInfo>();
+
+        protected WorkingBeatmap WBeatmap;
+
+        protected BeatmapManager Manager;
+
         [BackgroundDependencyLoader]
-        private void load(OsuColour colours)
+        private void load(OsuColour colours, BeatmapManager manager, IBindable<RulesetInfo> ruleset, Bindable<IEnumerable<Mod>> selectedMods)
         {
             starDifficulty.AccentColour = colours.Yellow;
+            Ruleset.BindTo(ruleset);
+            if (selectedMods != null) SelectedMods.BindTo(selectedMods);
+            Manager = manager;
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            Ruleset.BindValueChanged(rulesetChanged, true);
+            SelectedMods.BindValueChanged(selectedModsChanged, false);
+        }
+
+        private void rulesetChanged(RulesetInfo newRuleset)
+        {
+            if (newRuleset == null) return;
+
+            instance = newRuleset.CreateInstance();
+
+            if (WBeatmap == null || (beatmap.RulesetID != 0 && beatmap.RulesetID != Ruleset.Value.ID)) return;
+
+            starDifficulty.Value = (float)(instance.CreateDifficultyCalculator(WBeatmap).Calculate(WBeatmap.Mods.Value.ToArray()).StarRating);
+        }
+
+            private void selectedModsChanged(IEnumerable<Mod> obj)
+        {
+            if (WBeatmap == null || WBeatmap.Mods.Value==obj || (beatmap.RulesetID != 0 && beatmap.RulesetID != Ruleset.Value.ID)) return;
+
+            starDifficulty.Value = (float)(instance.CreateDifficultyCalculator(WBeatmap).Calculate(obj.ToArray()).StarRating);
         }
 
         private class StatisticRow : Container, IHasAccentColour
