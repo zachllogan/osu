@@ -16,6 +16,7 @@ using osu.Framework.Configuration;
 using System.Collections.Generic;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets;
+using System.Linq;
 
 namespace osu.Game.Screens.Select.Details
 {
