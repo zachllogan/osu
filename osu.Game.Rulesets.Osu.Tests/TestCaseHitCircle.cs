@@ -18,6 +18,7 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Osu.Replays;
 using osu.Game.Rulesets.Replays;
+using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Osu.Tests
 {
@@ -124,10 +125,10 @@ namespace osu.Game.Rulesets.Osu.Tests
             public TestDrawableHitCircle(HitCircle h, bool auto) : base(h)
             {
                 this.auto = auto;
-                OnJudgement += onJudgement;
+                OnNewResult += onJudgement;
             }
 
-            private void onJudgement(DrawableHitObject judegedObject, Judgement judgement)
+            private void onJudgement(DrawableHitObject judegedObject, JudgementResult judgement)
             {
                 DrawableOsuJudgement drawable = new DrawableOsuJudgement(judgement, judegedObject)
                 {
