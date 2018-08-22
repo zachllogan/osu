@@ -77,9 +77,11 @@ namespace osu.Game.Screens.Select.Carousel
             instance = Ruleset.Value.CreateInstance();
 
             float starCount = (float)beatmap.StarDifficulty;
+            float modStarCount = 0;
             if (!(Beatmap == null || (beatmap.RulesetID != 0 && beatmap.RulesetID != Ruleset.Value.ID)))
             {
-                starCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(SelectedMods.Value.ToArray()).StarRating);
+                starCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(new Mod[0]).StarRating);
+                modStarCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(Beatmap.Mods.Value.ToArray()).StarRating);
             }
             Children = new Drawable[]
             {
@@ -150,6 +152,7 @@ namespace osu.Game.Screens.Select.Carousel
                                 starCounter = new StarCounter
                                 {
                                     CountStars = starCount,
+                                    ModCountStars = modStarCount,
                                     Scale = new Vector2(0.8f),
                                 }
                             }
@@ -175,14 +178,20 @@ namespace osu.Game.Screens.Select.Carousel
 
             if (Beatmap == null || (beatmap.RulesetID != 0 && beatmap.RulesetID != Ruleset.Value.ID)) return;
 
-            starCounter.CountStars = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(Beatmap.Mods.Value.ToArray()).StarRating);
+            float starCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(new Mod[0]).StarRating);
+            float modStarCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(Beatmap.Mods.Value.ToArray()).StarRating);
+            starCounter.CountStars = starCount;
+            starCounter.ModCountStars = modStarCount;
         }
 
         private void selectedModsChanged(IEnumerable<Mod> obj)
         {
             if (Beatmap == null || (beatmap.RulesetID != 0 && beatmap.RulesetID != Ruleset.Value.ID)) return;
 
-            starCounter.CountStars = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(obj.ToArray()).StarRating);
+            float starCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(new Mod[0]).StarRating);
+            float modStarCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(obj.ToArray()).StarRating);
+            starCounter.CountStars = starCount;
+            starCounter.ModCountStars = modStarCount;
         }
 
         protected override void Selected()
