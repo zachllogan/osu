@@ -117,14 +117,17 @@ namespace osu.Game.Graphics.UserInterface
         public void ResetCount()
         {
             countStars = 0;
+            modCountStars = 0;
             StopAnimation();
         }
 
         public void ReplayAnimation()
         {
             var t = countStars;
+            var t2 = modCountStars;
             ResetCount();
             CountStars = t;
+            ModCountStars = t2;
         }
 
         public void StopAnimation()
