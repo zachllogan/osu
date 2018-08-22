@@ -81,7 +81,7 @@ namespace osu.Game.Screens.Select.Carousel
             if (!(Beatmap == null || (beatmap.RulesetID != 0 && beatmap.RulesetID != Ruleset.Value.ID)))
             {
                 starCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(new Mod[0]).StarRating);
-                modStarCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(Beatmap.Mods.Value.ToArray()).StarRating);
+                modStarCount = (float)(instance.CreateDifficultyCalculator(Beatmap).Calculate(selectedMods.Value.ToArray()).StarRating);
             }
             Children = new Drawable[]
             {
@@ -167,7 +167,7 @@ namespace osu.Game.Screens.Select.Carousel
             base.LoadComplete();
 
             Ruleset.BindValueChanged(rulesetChanged, true);
-            SelectedMods.BindValueChanged(selectedModsChanged, false);
+            SelectedMods.BindValueChanged(selectedModsChanged, true);
         }
 
         private void rulesetChanged(RulesetInfo newRuleset)
