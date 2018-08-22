@@ -29,6 +29,7 @@ namespace osu.Game.Rulesets.Osu.Mods
         public override double ScoreMultiplier => 1;
         public override ModType Type => ModType.DifficultyIncrease;
         public override bool Ranked => true;
+        public override Type[] IncompatibleMods => new[] { typeof(ModRelax) };
 
 
         public void ApplyToDrawableHitObjects(IEnumerable<DrawableHitObject> drawables)
