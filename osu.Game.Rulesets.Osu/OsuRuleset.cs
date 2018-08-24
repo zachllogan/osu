@@ -120,7 +120,7 @@ namespace osu.Game.Rulesets.Osu
                     };
                 case ModType.Fun:
                     return new Mod[] {
-                        new OsuModArrange(),
+                        new OsuModTransform(),
                         new OsuModMinefield(),
                     };
                 default:
