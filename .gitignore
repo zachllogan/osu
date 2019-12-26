@@ -331,3 +331,4 @@ fastlane/report.xml
 # inspectcode
 inspectcodereport.xml
 inspectcode
+/osu-resources
