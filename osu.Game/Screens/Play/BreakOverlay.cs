@@ -64,10 +64,12 @@ namespace osu.Game.Screens.Play
         private readonly BreakArrows breakArrows;
         private readonly SkipOverlay.Button skipButton;
         private readonly double gameplayStartTime;
+        private readonly GameplayClockContainer gameplayClockContainer;
 
-        public BreakOverlay(bool letterboxing, double gameplayStartTime = 0, ScoreProcessor scoreProcessor = null)
+        public BreakOverlay(bool letterboxing, double gameplayStartTime = 0, GameplayClockContainer gameplayClockContainer = null, ScoreProcessor scoreProcessor = null)
         {
             this.gameplayStartTime = gameplayStartTime;
+            this.gameplayClockContainer = gameplayClockContainer;
             this.scoreProcessor = scoreProcessor;
             RelativeSizeAxes = Axes.Both;
             Child = fadeContainer = new Container
@@ -122,6 +124,7 @@ namespace osu.Game.Screens.Play
                         RelativeAnchorPosition = new osuTK.Vector2(0.5f, 0.75f),
                         Origin = Anchor.Centre,
                         Height = 0.2f,
+                        Action = skip,
                     }
                 }
             };
@@ -219,6 +222,11 @@ namespace osu.Game.Screens.Play
         {
             info.AccuracyDisplay.Current.BindTo(processor.Accuracy);
             info.GradeDisplay.Current.BindTo(processor.Rank);
+        }
+
+        private void skip()
+        {
+            gameplayClockContainer?.Seek(getCurrentBreak().EndTime);
         }
     }
 }
