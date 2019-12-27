@@ -8,13 +8,15 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Bindings;
 using osu.Game.Beatmaps.Timing;
+using osu.Game.Input.Bindings;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Screens.Play.Break;
 
 namespace osu.Game.Screens.Play
 {
-    public class BreakOverlay : Container
+    public class BreakOverlay : Container, IKeyBindingHandler<GlobalAction>
     {
         private readonly ScoreProcessor scoreProcessor;
 
@@ -228,5 +230,19 @@ namespace osu.Game.Screens.Play
         {
             gameplayClockContainer?.Seek(getCurrentBreak().EndTime);
         }
+
+        public bool OnPressed(GlobalAction action)
+        {
+            switch (action)
+            {
+                case GlobalAction.SkipCutscene:
+                    skipButton.Click();
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool OnReleased(GlobalAction action) => false;
     }
 }
