@@ -213,7 +213,7 @@ namespace osu.Game.Screens.Play
             public override void Show() => State = Visibility.Visible;
         }
 
-        private class Button : OsuClickableContainer
+        public class Button : OsuClickableContainer
         {
             private Color4 colourNormal;
             private Color4 colourHover;

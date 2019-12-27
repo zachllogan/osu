@@ -62,6 +62,7 @@ namespace osu.Game.Screens.Play
         private readonly RemainingTimeCounter remainingTimeCounter;
         private readonly BreakInfo info;
         private readonly BreakArrows breakArrows;
+        private readonly SkipOverlay.Button skipButton;
         private readonly double gameplayStartTime;
 
         public BreakOverlay(bool letterboxing, double gameplayStartTime = 0, ScoreProcessor scoreProcessor = null)
@@ -115,6 +116,12 @@ namespace osu.Game.Screens.Play
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
+                    },
+                    skipButton = new SkipOverlay.Button
+                    {
+                        RelativeAnchorPosition = new osuTK.Vector2(0.5f, 0.75f),
+                        Origin = Anchor.Centre,
+                        Height = 0.2f,
                     }
                 }
             };
