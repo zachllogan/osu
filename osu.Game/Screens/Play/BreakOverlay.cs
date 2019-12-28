@@ -229,10 +229,10 @@ namespace osu.Game.Screens.Play
         private void skip()
         {
             BreakPeriod b = getCurrentBreak();
+            if (b == null)
+                return;
             if (Clock.CurrentTime + 1500 < b.EndTime)
-            {
                 gameplayClockContainer?.Seek(b.EndTime - 1500);
-            }
         }
 
         public bool OnPressed(GlobalAction action)
