@@ -229,8 +229,6 @@ namespace osu.Game.Screens.Play
         private void skip()
         {
             BreakPeriod b = getCurrentBreak();
-            if (b == null)
-                return;
             if (Clock.CurrentTime + 1500 < b.EndTime)
                 gameplayClockContainer?.Seek(b.EndTime - 1500);
         }
@@ -240,7 +238,8 @@ namespace osu.Game.Screens.Play
             switch (action)
             {
                 case GlobalAction.SkipCutscene:
-                    skipButton.Click();
+                    if (getCurrentBreak() != null)
+                        skipButton.Click();
                     return true;
             }
 
